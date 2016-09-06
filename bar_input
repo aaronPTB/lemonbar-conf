@@ -15,7 +15,16 @@ function expandstr {
 }	
 
 ## STATIC BAR ELEMENTS
-window_icon="%{B#33CCDD} \uf00a %{B-}"
+
+function window_icon {
+	if [[ "$1" == 'urxvt' ]]; then	
+		echo -e "\uf120"
+	elif [[ "$1" == 'google-chrome' ]]; then
+		echo -e "\uf2b3"
+	else	
+		echo -e "\uf00a"
+	fi
+}
 
 function window {	
 	wnd_focus=$(xdotool getwindowfocus)                                                                                                                         
@@ -24,7 +33,7 @@ function window {
 		  head -1 |\
 		  grep -Po "[^\"]*")
 	
-	echo "%{B#33CCDD}%{O20}$(expandstr $wnd_title 15)%{B-}"
+	echo -e "%{B#33CCDD}%{O20}$(window_icon $wnd_title) $(expandstr $wnd_title 15)%{B-}"
 }
 
 function timeday {
@@ -39,6 +48,6 @@ function battery {
 }
 
 while [ 1 -gt 0 ]; do	
-	echo -e "$window_icon$(window)$(timeday)$(battery)"
+	echo -e "$(window)$(timeday)$(battery)"
 	sleep .1
 done
