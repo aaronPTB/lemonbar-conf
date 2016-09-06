@@ -1,0 +1,44 @@
+#! /bin/sh
+BATC=/sys/class/power_supply/BAT1/capacity
+BATS=/sys/class/power_supply/BAT1/status
+
+function expandstr {
+	if [ $# -gt 1 ]; then
+		export COMP=$(expr $2 - ${#1})
+		comp_str=$(perl -e 'print(" "x$ENV{COMP})')
+		echo "$1$comp_str"
+	elif [ $# -gt 0 ]; then
+		export COMP=$1
+		comp_str=$(perl -e 'print(" "x$ENV{COMP})')
+		echo "$comp_str"
+	fi
+}	
+
+## STATIC BAR ELEMENTS
+window_icon="%{B#33CCDD} \uf00a %{B-}"
+
+function window {	
+	wnd_focus=$(xdotool getwindowfocus)                                                                                                                         
+	wnd_title=$(xprop -id $wnd_focus WM_CLASS |\
+		  grep -Po "\".*?\"" |\
+		  head -1 |\
+		  grep -Po "[^\"]*")
+	
+	echo "%{B#33CCDD}%{O20}$(expandstr $wnd_title 15)%{B-}"
+}
+
+function timeday {
+	echo "%{c}$(clock)"
+}
+
+function battery {
+	echo "%{r}$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 |\
+		    grep -oE "[0-9]*%" |\
+		    grep -oP "\d*" |\
+		    head -1)%%{O10}"
+}
+
+while [ 1 -gt 0 ]; do	
+	echo -e "$window_icon$(window)$(timeday)$(battery)"
+	sleep .1
+done

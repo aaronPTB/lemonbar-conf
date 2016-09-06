@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PANEL_FIFO=/tmp/panel-fifo
+PANEL_HEIGHT=40
+PANEL_FONT="Meslo\ LG\ S\ DZ\ for\ Powerline:size=10"
+PANEL_WM_NAME=bspwm_panel
+BG_COLOR="#222A35"
+FG_COLOR="#EEEEEE"
+
+bspc config top_padding $PANEL_HEIGHT
+
+bar_input | lemonbar -p -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "$PANEL_FONT" -f "FontAwesome:size=12" -B "$BG_COLOR"  -F "$FG_COLOR"										
