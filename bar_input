@@ -1,6 +1,6 @@
 #! /bin/sh
-BATC=/sys/class/power_supply/BAT1/capacity
-BATS=/sys/class/power_supply/BAT1/status
+BATC=./sys/class/power_supply/BAT1/capacity
+BATS=./sys/class/power_supply/BAT1/status
 
 function expandstr {
 	if [ $# -gt 1 ]; then
@@ -14,18 +14,23 @@ function expandstr {
 	fi
 }	
 
-## STATIC BAR ELEMENTS
+function username {
+	echo $USER
+}
 
 function window_icon {
 	if [[ "$1" == 'urxvt' ]]; then	
 		echo -e "\uf120"
 	elif [[ "$1" == 'google-chrome' ]]; then
-		echo -e "\uf2b3"
+		echo -e "\uf268"
+	elif [[ "$1" == 'nautilus' ]]; then
+		echo -e "\uf07b"
+	elif [[ "$1" == 'atom' ]]; then
+		echo -e "\uf121"
 	else	
 		echo -e "\uf00a"
 	fi
 }
-
 function window {	
 	wnd_focus=$(xdotool getwindowfocus)                                                                                                                         
 	wnd_title=$(xprop -id $wnd_focus WM_CLASS |\
@@ -33,21 +38,45 @@ function window {
 		  head -1 |\
 		  grep -Po "[^\"]*")
 	
-	echo -e "%{B#33CCDD}%{O20}$(window_icon $wnd_title) $(expandstr $wnd_title 15)%{B-}"
+	echo -e "%{U#237889}%{O20}$(window_icon $wnd_title) $(expandstr $wnd_title 15)%{U-}"
 }
 
 function timeday {
-	echo "%{c}$(clock)"
+	echo $(clock)
 }
 
 function battery {
-	echo "%{r}$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 |\
+	batlvl="$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 |\
 		    grep -oE "[0-9]*%" |\
 		    grep -oP "\d*" |\
-		    head -1)%%{O10}"
+		    head -1)"
+
+	charging="$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 |\
+		    grep "state: *charging\|state: *fully")"
+	state=""
+	if [[ ${#charging} -gt 0 ]]; then
+		state="%{F#22CDA1}"
+	fi
+
+	if [[ $batlvl -gt 87 ]]; then
+		echo "$state\uf240%{F-}"
+	elif [[ $batlvl -gt 63 ]]; then
+		echo "$state\uf241%{F-}"
+	elif [[ $batlvl -gt 37 ]]; then
+		echo "$state\uf242%{F-}"
+	elif [[ $batlvl -gt 13 ]]; then
+		echo "$state\uf243%{F-}"
+	else
+		echo "$state\uf244%{F-}"
+	fi
 }
 
-while [ 1 -gt 0 ]; do	
-	echo -e "$(window)$(timeday)$(battery)"
+while [ 1 -gt 0 ]; do
+	
+	f="%{l}$(window)"
+	c="%{c}$(username)"
+	b="%{r}$(battery) $(timeday)%{O10}"
+
+	echo -e "$f$c$b"
 	sleep .1
 done
