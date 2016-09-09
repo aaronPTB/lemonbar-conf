@@ -20,18 +20,18 @@ function username {
 
 function get_window {
 	winid=$(bspc query -D -d)
-	ismain=$(eval $($winid == 0x00800003))
-	isdev=$(eval $($winid == 0x00800004))
-	isweb=$(eval $($winid == 0x00800005))
-	
-	if [[ $ismain == true ]]; then
-		echo "main"
-	elif [[ $isdev == true ]]; then
-		echo "dev"
-	elif [[ $isweb == true ]]; then
-		echo "web"
+	win_num="${winid: -1}"
+
+	if [ "$win_num" == "3" ]; then	
+		echo -e "%{F#FFFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"
+	elif [ "$win_num" == "4" ]; then
+		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#FFFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"	
+	elif [ "$win_num" == "5" ]; then
+		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#FFFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"
+	elif [ "$win_num" == "6" ]; then
+		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#FFFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"
 	else
-		echo "etc"
+		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#FFFFFFFF}etc%{F-}"
 	fi
 }
 
@@ -108,7 +108,7 @@ function active {
 while [ 1 -gt 0 ]; do
 	
 	f="%{l}%{O10}$(window)"
-	c="%{c}"
+	c="%{c}$(get_window)"
 	b="%{r}$(battery) $(timeday)%{O10}"
 
 	echo -e "$f$c$b"
