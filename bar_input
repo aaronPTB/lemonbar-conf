@@ -72,7 +72,19 @@ function window {
 }
 
 function timeday {
-	echo $(clock | grep -o "[0-9]*:[0-9]*")
+	timed=$(clock | grep -o "[0-9]*:[0-9]*")
+	hour=$(echo $timed | grep -oP "^[0-9]*")
+	min=$(echo $timed | grep -oP "[0-9]*$")
+	mdhr=$((hour % 12))	
+	part="AM"
+	if [[ $hour > 11 ]]; then
+		part="PM"
+	fi
+	if [[ $mdhr == 0 ]]; then
+		mdhr=12
+	fi
+
+	echo -e "$mdhr:$min $part"
 }
 
 function battery {
@@ -89,15 +101,15 @@ function battery {
 	fi
 
 	if [[ $batlvl -gt 87 ]]; then
-		echo "$state\uf240%{F-}"
+		echo "$state$batlvl% \uf240%{F-}"
 	elif [[ $batlvl -gt 63 ]]; then
-		echo "$state\uf241%{F-}"
+		echo "$state$batlvl% \uf241%{F-}"
 	elif [[ $batlvl -gt 37 ]]; then
-		echo "$state\uf242%{F-}"
+		echo "$state$batlvl% \uf242%{F-}"
 	elif [[ $batlvl -gt 13 ]]; then
-		echo "$state\uf243%{F-}"
+		echo "$state$batlvl% \uf243%{F-}"
 	else
-		echo "$state\uf244%{F-}"
+		echo "$state$batlvl% \uf244%{F-}"
 	fi
 }
 
