@@ -60,6 +60,10 @@ function window {
 		  head -1 |\
 		  grep -Po "[^\"]*")
 
+	wnd_name=$(xprop -id $wnd_focus WM_NAME |\
+		   grep -Po "\".*\"" |\
+		   head -1 |\
+		   grep -Po "[^\"]*")
 	if [[ "$wnd_title" == 'Navigator' ]]; then
 		wnd_title='firefox'
 	elif [[ "$wnd_title" == 'google-chrome' ]]; then
@@ -75,12 +79,12 @@ function timeday {
 	timed=$(clock | grep -o "[0-9]*:[0-9]*")
 	hour=$(echo $timed | grep -oP "^[0-9]*")
 	min=$(echo $timed | grep -oP "[0-9]*$")
-	mdhr=$((hour % 12))	
+	mdhr=$(($hour % 12))
 	part="AM"
-	if [[ $hour > 11 ]]; then
+	if [[ "10#$hour" > 11 ]]; then
 		part="PM"
 	fi
-	if [[ $mdhr == 0 ]]; then
+	if [[ "10#$mdhr" == 0 ]]; then
 		mdhr=12
 	fi
 
