@@ -79,16 +79,17 @@ function timeday {
 	timed=$(clock | grep -o "[0-9]*:[0-9]*")
 	hour=$(echo $timed | grep -oP "^[0-9]*")
 	min=$(echo $timed | grep -oP "[0-9]*$")
-	mdhr=$(($hour % 12))
+	mdhr=$((10#$hour % 12))
+	mdhr=11
 	part="AM"
-	if [[ "10#$hour" > 11 ]]; then
+	if [[ "$hour" > 11 ]]; then
 		part="PM"
 	fi
-	if [[ "10#$mdhr" == 0 ]]; then
+	if [[ "$mdhr" == 0 ]]; then
 		mdhr=12
 	fi
 
-	echo -e "$mdhr:$min $part"
+	echo -e "$hour:$min $part"
 }
 
 function battery {
