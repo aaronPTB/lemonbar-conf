@@ -1,6 +1,18 @@
 #! /bin/sh
+LIGHT=0
+
 BATC=./sys/class/power_supply/BAT1/capacity
 BATS=./sys/class/power_supply/BAT1/status
+
+#Foreground color
+fgc=#FFFFFF
+
+#Highlight color
+hlc=#30BFCA
+
+if [[ $LIGHT == 0 ]]; then
+	fgc=#333333
+fi
 
 function expandstr {
 	if [ $# -gt 1 ]; then
@@ -23,15 +35,15 @@ function get_window {
 	win_num="${winid: -1}"
 
 	if [ "$win_num" == "3" ]; then	
-		echo -e "%{F#FFFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"
+		echo -e "%{F$hlc}main%{F-}  %{F$fgc}dev%{F-}  %{F$fgc}web%{F-}  %{F$fgc}music%{F-}  %{F$fgc}etc%{F-}"
 	elif [ "$win_num" == "4" ]; then
-		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#FFFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"	
+		echo -e "%{F$fgc}main%{F-}  %{F$hlc}dev%{F-}  %{F$fgc}web%{F-}  %{F$fgc}music%{F-}  %{F$fgc}etc%{F-}"	
 	elif [ "$win_num" == "5" ]; then
-		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#FFFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"
+		echo -e "%{F$fgc}main%{F-}  %{F$fgc}dev%{F-}  %{F$hlc}web%{F-}  %{F$fgc}music%{F-}  %{F$fgc}etc%{F-}"
 	elif [ "$win_num" == "6" ]; then
-		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#FFFFFFFF}music%{F-}  %{F#AAFFFFFF}etc%{F-}"
+		echo -e "%{F$fgc}main%{F-}  %{F$fgc}dev%{F-}  %{F$fgc}web%{F-}  %{F$hlc}music%{F-}  %{F$fgc}etc%{F-}"
 	else
-		echo -e "%{F#AAFFFFFF}main%{F-}  %{F#AAFFFFFF}dev%{F-}  %{F#AAFFFFFF}web%{F-}  %{F#AAFFFFFF}music%{F-}  %{F#FFFFFFFF}etc%{F-}"
+		echo -e "%{F$fgc}main%{F-}  %{F$fgc}dev%{F-}  %{F$fgc}web%{F-}  %{F$fgc}music%{F-}  %{F$hlc}etc%{F-}"
 	fi
 }
 
@@ -72,7 +84,7 @@ function window {
 		wnd_title='desktop'
 	fi
 
-	echo -e "%{U#237889}%{O20}$(window_icon $wnd_title) $(expandstr $wnd_title 15)%{U-}"
+	echo -e "%{F$fgc}%{U#237889}%{O20}$(window_icon $wnd_title) $(expandstr $wnd_title 15)%{U-}%{F-}"
 }
 
 function timeday {
@@ -89,7 +101,7 @@ function timeday {
 		mdhr=12
 	fi
 
-	echo -e "$hour:$min $part"
+	echo -e "%{F$fgc}$hour:$min $part%{F-}"
 }
 
 function battery {
@@ -102,7 +114,9 @@ function battery {
 		    grep "state: *charging\|state: *fully")"
 	state=""
 	if [[ ${#charging} -gt 0 ]]; then
-		state="%{F#22CDA1}"
+		state="%{F$hlc}"
+	else
+		state="%{F$fgc}"
 	fi
 
 	if [[ $batlvl -gt 87 ]]; then

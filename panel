@@ -1,12 +1,27 @@
 #!/bin/bash
+OUT=false
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_HEIGHT=60
-PANEL_FONT="Meslo\ LG\ S\ DZ\ for\ Powerline:size=10"
+PANEL_FONT="Meslo\ LG\ L\ DZ\ for\ Powerline:size=14"
 PANEL_WM_NAME=bspwm_panel
 BG_COLOR="#222A35"
-FG_COLOR="#EEEEEE"
+FG_COLOR="#FFFFFF"
 
-bspc config top_padding $PANEL_HEIGHT
 
-bar_input | lemonbar -p -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "$PANEL_FONT" -f "FontAwesome:size=12" -F "$FG_COLOR"										
+if [ $OUT == true ]; then 	
+	bspc config top_padding $(expr 2 \* $PANEL_HEIGHT)
+	bar_input | lemonbar -n "$PANEL_WM_NAME"\
+		             -g 3100x$PANEL_HEIGHT+50+50\
+			     -f "$PANEL_FONT"\
+			     -f "FontAwesome:size=19"\
+			     -B "$BG_COLOR"\
+			     -F "$FG_COLOR" 2> /dev/null
+else
+	bspc config top_padding $PANEL_HEIGHT
+	bar_input | lemonbar -n "$PANEL_WM_NAME"\
+		             -g 3120x$PANEL_HEIGHT+40\
+			     -f "$PANEL_FONT"\
+			     -f "FontAwesome:size=19"\
+			     -F "$FG_COLOR" 2> /dev/null
+fi
