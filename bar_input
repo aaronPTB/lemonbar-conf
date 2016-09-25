@@ -8,7 +8,7 @@ BATS=./sys/class/power_supply/BAT1/status
 fgc=#FFFFFF
 
 #Highlight color
-hlc=#30BFCA
+hlc=#50CFDA
 
 if [[ $LIGHT == 0 ]]; then
 	fgc=#333333

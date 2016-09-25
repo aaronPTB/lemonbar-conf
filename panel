@@ -3,7 +3,7 @@ OUT=false
 
 PANEL_FIFO=/tmp/panel-fifo
 PANEL_HEIGHT=60
-PANEL_FONT="Meslo\ LG\ L\ DZ\ for\ Powerline:size=14"
+PANEL_FONT="Sauce\ Code\ Powerline:size=16"
 PANEL_WM_NAME=bspwm_panel
 BG_COLOR="#222A35"
 FG_COLOR="#FFFFFF"
